@@ -18,7 +18,7 @@ refs.btnDel.addEventListener('click', todoDel)
 refs.ul.addEventListener('click', changeStatus);
 
 const key = 'todo';
-const todoList = JSON.parse(localStorage.getItem(key)) || [];
+let todoList = JSON.parse(localStorage.getItem(key)) || [];
 
 if (todoList.length) {
     refs.ul.append(...todoList.map(el => createMarkup(el)));
@@ -37,7 +37,7 @@ function todoAdd(){
     refs.ul.appendChild(createMarkup(td));
     refs.input.value = '';
 
-    localStorage.setItem(key,JSON.stringify(todoList));
+    localStorage.setItem(key, JSON.stringify(todoList));
 }
 
 function createMarkup(td) {
@@ -74,7 +74,8 @@ function todoDel() {
     const data = JSON.parse(localStorage.getItem(key));
     const NewData = data.filter(el => el.status === 'list-item');
     localStorage.setItem(key, JSON.stringify(NewData));
-
+    todoList = [...NewData];
+    
     refs.ul.innerHTML = '';
     refs.ul.append(...NewData.map(el => createMarkup(el)));
 }

@@ -7,14 +7,15 @@
 // 7. Створити функція, яка буде видаляти задачу по кліку на кнопку
 
 const refs = {
-    input: document.querySelector('input-js'),
-    btnAdd: document.querySelector('btn-add'),
-    btnDel: document.querySelector('btn-delete'),
-    ul: document.querySelector('todo-list'),
+    input: document.querySelector('.input-js'),
+    btnAdd: document.querySelector('.btn-add'),
+    btnDel: document.querySelector('.btn-delete'),
+    ul: document.querySelector('.todo-list'),
 }
 
 refs.btnAdd.addEventListener('click', todoAdd);
-refs.addEventListener('click', changeStatus);
+refs.btnDel.addEventListener('click', todoDel)
+refs.ul.addEventListener('click', changeStatus);
 
 const key = 'todo';
 const todoList = JSON.parse(localStorage.getItem(key)) || [];
@@ -28,7 +29,7 @@ function todoAdd(){
         return
     }
     const td = {
-        td: Date.now(),
+        id: Date.now(),
         desc: refs.input.value,
         status: 'list-item',
     };
@@ -36,7 +37,7 @@ function todoAdd(){
     refs.ul.appendChild(createMarkup(td));
     refs.input.value = '';
 
-    localStorage.setItem(key.JSON.stringify(todoList));
+    localStorage.setItem(key,JSON.stringify(todoList));
 }
 
 function createMarkup(td) {
@@ -52,18 +53,17 @@ function changeStatus(ev) {
     if (ev.target.nodeName !== 'LI') {
         return
     }
-    if (ev.target.contains('list-item')) {
+    if (ev.target.classList.contains('list-item')) {
         ev.target.classList.replace('list-item', 'list-item-complete')
     } else {
-        ev.target.classList.replace('list-item-complete', 'list-item'),
-    
-            console.log(ev.target.classList[0]);
+        ev.target.classList.replace('list-item-complete', 'list-item')     
     }
+
+    console.log(ev.target.classList[0]);
 
     const data = JSON.parse(localStorage.getItem(key));
     const NewData = data.map(el => {
-        el.id === Number(ev.target.id)
-        { el.status = ev.target.classList[0] };
+        if(el.id === Number(ev.target.id)){ el.status = ev.target.classList[0]};
         return el
     });
 
@@ -72,11 +72,11 @@ function changeStatus(ev) {
 
 function todoDel() {
     const data = JSON.parse(localStorage.getItem(key));
-    const Newdata = data.filter(el => el.status === 'list-item');
-    localStorage.setItem(key, JSON.stringify(Newdata));
+    const NewData = data.filter(el => el.status === 'list-item');
+    localStorage.setItem(key, JSON.stringify(NewData));
 
     refs.ul.innerHTML = '';
-    refs.ul.append(...Newdata.map(el => createMarkup(el)));
+    refs.ul.append(...NewData.map(el => createMarkup(el)));
 }
 
 
